@@ -1,0 +1,263 @@
+---
+title: "individual assignment"
+output:
+  html_document:
+    css: ../lab.css
+    highlight: pygments
+    theme: cerulean
+    toc: true
+    toc_float: true
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
+
+# Assignment 1 **(50 points)**
+
+## **Case 1 (20 points)**
+
+**A survey of 417 individuals asks questions about how often they exercise, marital status, and annual income.**
+
+### **1. Load the `Fitness` dataset and Write a script in R to calculate the 25th, 50th, and 75th percentiles of income. What does this tell you about the income distribution? （10 points）**
+
+```{r}
+fitness_data <- read.csv("Fitness.csv")
+income_percentiles <- quantile(fitness_data$Income, probs = c(0.25, 0.5, 0.75))
+print(income_percentiles)
+
+
+```
+
+answer:
+
+**The income distribution is somewhat skewed:** Since the difference between the 75% quantile and the 50% quantile (about 20,000 yuan) is greater than the difference between the 50% quantile and the 25% quantile (about 16,000 yuan), it can be inferred that the income distribution may be right-skewed, that is, a small number of high-income earners have pulled up the overall income distribution.
+
+**The income difference is large:** The 75% quantile of income is nearly 40,000 yuan higher than the 25% quantile, indicating that there is a significant income gap between different groups.
+
+# The income difference is large: The 75% quantile of income is nearly 40,000 yuan higher than the 25% quantile, indicating that there is a significant income gap between different groups.
+
+# The income difference is large: The 75% quantile of income is nearly 40,000 yuan higher than the 25% quantile, indicating that there is a significant income gap between different groups.
+
+### **2. Use R to calculate the mean income for different marital statuses. What is the difference between mean income of married and that of non-married individuals? (10 points)**
+
+```{r}
+mean_income_by_marital_status <- aggregate(Income ~ Married, data = fitness_data, FUN = mean)
+
+print(mean_income_by_marital_status)
+
+income_diff <- mean_income_by_marital_status[mean_income_by_marital_status$Married == "Yes", "Income"] - 
+               mean_income_by_marital_status[mean_income_by_marital_status$Married == "No", "Income"]
+
+print(income_diff)
+
+```
+
+## **Case 2 (30 points)**
+
+**The `Country` data file shows the annual returns (in %) for a mutual fund focusing on investments in Latin America and a mutual fund focusing on investments in Canada over the past 20 years.**
+
+### **1. Write code to find out which fund had the higher average returns over this time period. Explain the result with your own words. （10 points）**
+
+```{r}
+country_data <- read.csv("Country.csv")
+
+mean_latin_america <- mean(country_data$Latin_America)
+mean_canada <- mean(country_data$Canada)
+
+print(paste("Latin America fund average return:", mean_latin_america))
+print(paste("Canada fund average return:", mean_canada))
+
+
+if (mean_latin_america > mean_canada) {
+  print("Latin America fund had higher average returns.")
+} else {
+  print("Canada fund had higher average returns.")
+}
+
+
+```
+
+answer:
+
+**Average return:** The average return of the Latin American fund is higher than that of the Canadian fund, which means that during this period, the Latin American fund has a higher annual return on investment.
+If an investor invested in both funds during this period, the Latin American fund brought them more returns.
+
+**Investment return difference:** Although the average return of the Latin American fund is slightly higher, the difference is not very large, about 1.14%.
+This difference may bring some additional returns in the long run, but it needs to be combined with other factors (such as risk and volatility) to comprehensively consider which fund is more suitable for investors.
+
+**Potential factors:** Although the Latin American fund has a higher return, it may also be accompanied by higher risks (in terms of variance and standard deviation).
+Therefore, investors should weigh the return and risk when choosing, and determine whether they are willing to bear greater volatility to obtain slightly higher returns.
+
+### **2. Write code to measure the location (range, IQR, mean, variance, sd) of both `Latin_America` and `Canada`. （10 points）Compare and Explain the result with your own words.（10 points）（20 points in total）**
+
+```{r}
+
+
+country_data <- read.csv("Country.csv")
+
+
+latin_america_range <- range(country_data$Latin_America)
+latin_america_iqr <- IQR(country_data$Latin_America)
+latin_america_mean <- mean(country_data$Latin_America)
+latin_america_variance <- var(country_data$Latin_America)
+latin_america_sd <- sd(country_data$Latin_America)
+
+
+print("Latin America Fund:")
+print(paste("Range:", latin_america_range[1], "to", latin_america_range[2]))
+print(paste("IQR:", latin_america_iqr))
+print(paste("Mean:", latin_america_mean))
+print(paste("Variance:", latin_america_variance))
+print(paste("SD:", latin_america_sd))
+```
+
+```{r}
+
+country_data <- read.csv("Country.csv")
+
+canada_range <- range(country_data$Canada)
+canada_iqr <- IQR(country_data$Canada)
+canada_mean <- mean(country_data$Canada)
+canada_variance <- var(country_data$Canada)
+canada_sd <- sd(country_data$Canada)
+
+print("Canada Fund:")
+print(paste("Range:", canada_range[1], "to", canada_range[2]))
+print(paste("IQR:", canada_iqr))
+print(paste("Mean:", canada_mean))
+print(paste("Variance:", canada_variance))
+print(paste("SD:", canada_sd))
+```
+
+answer:
+
+**Range**: The Latin American fund has a range of -54.64% to 91.6%, while the Canadian fund has a range of -42.64% to 51.91%.
+This indicates that the Latin American fund has a greater volatility in annual returns, with the highest gain close to 92% and the lowest loss exceeding 54%.
+In contrast, the Canadian fund has relatively smaller maximum gains and losses, and is more stable.
+
+**Interquartile Range (IQR):** The Latin American fund has an IQR of 58.34, while the Canadian fund has an IQR of 31.45.
+The IQR reflects the distribution of the middle 50% of data.
+The Latin American fund has a larger interquartile range, which means that the fund has a higher volatility in annual returns, especially in the middle range.
+The Canadian fund has a smaller IQR, which means that its returns are more stable in the middle range.
+
+**Mean**: The average annual return of the Latin American fund is 10.58%, slightly higher than the 9.43% of the Canadian fund.
+This indicates that although the Latin American fund has a higher volatility, its average return is slightly higher.
+Therefore, in the long run, Latin American funds may have an advantage in terms of returns, but the risk is relatively higher.
+
+**Variance and Standard Deviation (SD):** The variance of Latin American funds is 1375.87 and the standard deviation is 37.09; while the variance of Canadian funds is 484.95 and the standard deviation is 22.02.
+Both variance and standard deviation reflect volatility.
+The variance and standard deviation of Latin American funds are significantly higher than those of Canadian funds, indicating that its return volatility is much greater.
+In other words, although Latin American funds may have higher potential returns, their risks are also much higher than Canadian funds.
+
+**Summary**:
+
+-   Latin American funds: The average return rate is slightly higher, but the volatility is extremely high, accompanied by high risks.
+    While investors are pursuing higher returns, they also need to bear greater volatility.
+
+-   Canadian funds: The average return rate is relatively low, but the volatility is small and the performance is more stable.
+    For investors with lower risk tolerance, Canadian funds may be a more stable choice.
+    Therefore, if investors prefer higher potential returns and are willing to take greater risks, Latin American funds may be a better choice.
+    If investors are more concerned about stable returns and lower volatility, Canadian funds may be more suitable.
+
+# Assignment 2 **(50 points)**
+
+**You have just obtained a dataset `stockprice` for analysis, including the date, AMZN,GOOG and X index.**
+
+### 1. Create a scatterplot for `AMZN` against `X Index`, set the title as "Amazon Stock Price against X Index", name the X-axis as "Amazon Stock Price" and Y-asix as "X Index". **(10 points)** Comment on the relationship between `AMZN` and `X Index` **(10 points). (20 points in total)**
+
+```{r}
+stockprice_data <- read.csv("stockprice.csv")
+plot(stockprice_data$AMZN, stockprice_data$X.Index, 
+     main = "Amazon Stock Price against X Index", 
+     xlab = "Amazon Stock Price", 
+     ylab = "X Index",
+     pch = 19, 
+     col = "blue")
+abline(lm(stockprice_data$X.Index ~ stockprice_data$AMZN), col = "red")
+
+```
+
+answer:
+
+**Overall trend:** It can be seen from the figure that the data points are relatively scattered and do not show obvious linear correlation.
+The red regression line is relatively flat, almost horizontal, indicating that there is no significant linear correlation between Amazon stock price and X index.
+
+**Relevance:**Since the distribution of points is more random and the regression line is close to the level, this shows that the correlation between Amazon stock price and the X index is weak, there may be some fluctuations, but it does not show an obvious positive or negative correlation.
+
+**Volatility:** We see that at higher Amazon stock prices (such as near 2000), the X-index is still spread across different ranges.
+This further supports the hypothesis of a lack of clear relationship between the two.
+
+**In conclusion:** Based on this scatter plot, there does not appear to be a significant linear correlation between Amazon stock price and the X-index.
+This means that when the price of Amazon stock rises or falls, there is no consistent directionality in the changes in the X Index.
+
+### 2. Update the above scatterplot so that when `X Index` is equal or greater than 200, the color of the points changes, and add the Legend as "Above or equal 200" and "Below 200". **(10 points)**
+
+```{r}
+stockprice_data <- read.csv("stockprice.csv")
+
+colors <- ifelse(stockprice_data$X.Index >= 200, "red", "blue")
+
+plot(stockprice_data$AMZN, stockprice_data$X.Index, 
+     main = "Amazon Stock Price against X Index", 
+     xlab = "Amazon Stock Price", 
+     ylab = "X Index",
+     pch = 19, 
+     col = colors)
+
+abline(lm(stockprice_data$X.Index ~ stockprice_data$AMZN), col = "black")
+
+
+legend("topright", legend = c("Above or equal 200", "Below 200"), 
+       col = c("red", "blue"), pch = 19)
+
+
+```
+
+### 3. Create two lines for `AMZN` (blue) and `GOOG` (green) on the same plot, set the title as "Stock Prices for Amazon and Google", name the X-axis as "Date" and Y-asix as "Stock Price", Add the y-axis limit from 0 to 3000 and add the Legend appropriately. **(10 points)** Comment on the trends over time in the plot. **(10 points) (20 points in total)**
+
+```{r}
+stockprice_data <- read.csv("stockprice.csv", fileEncoding = "UTF-8")
+
+
+
+stockprice_data$Date <- as.character(stockprice_data$Date)
+stockprice_data$Date <- as.Date(stockprice_data$Date, format = "%Y-%m-%d")
+
+
+
+plot(stockprice_data$Date, stockprice_data$AMZN, type = "l", col = "blue",
+     ylim = c(0, 3000),  
+     xlab = "Date", ylab = "Stock Price", 
+     main = "Stock Prices for Amazon and Google")  
+
+
+lines(stockprice_data$Date, stockprice_data$GOOG, col = "green")
+
+
+legend("topleft", legend = c("Amazon (AMZN)", "Google (GOOG)"), 
+       col = c("blue", "green"), lty = 1)
+
+
+    
+```
+
+answer:
+
+### Amazon (AMZN) Stock Price Trends:
+
+**Steady growth:** From 2016 to 2020, Amazon's stock price generally showed a continuous upward trend, especially after 2018, the growth became more significant.
+
+**Volatility:** While the overall trend is upward, there were some notable swings between 2018 and 2019, with the stock price rising sharply but then experiencing several declines.
+However, after the volatility, Amazon's stock price quickly recovered and reached higher levels (nearly \$2,500) as 2020 approached.
+
+**Strong Long-Term Growth:** Overall, Amazon stock's initial rise from around \$500 to nearly \$2,500 shows its strong long-term growth potential.
+
+### Google (GOOG) Stock Price Trends:
+
+**Steady growth:** Google’s stock price is also showing a growth trend, but compared to Amazon, the growth is relatively gentle.
+As can be seen from the figure, Google's stock price has gradually increased from approximately US\$700 in 2016 to approximately US\$1,500 in 2020.
+
+**Less Volatility**: Compared to Amazon, Google’s stock price fluctuates less and exhibits a more stable growth curve.
+Although there were some fluctuations from 2018 to 2019, the fluctuations were smaller than those of Amazon.
+
+**Steady growth:** Overall, Google's stock performance is relatively stable, with relatively slow growth but less risk.
